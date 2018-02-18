@@ -12,27 +12,18 @@ const COLOR_WHITE = 'w';
 const PIECE_PAWN = 'p';
 const PIECE_ROOK = 'r';
 const PIECE_KNIGHT = 'n';
-
-// const DEFAULT_BOARD_STATE = [
-// 	'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r', // 0-7
-// 	'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', // 8-15
-// 	'-', '-', '-', '-', '-', '-', '-', '-', // 16-23
-// 	'-', '-', '-', '-', '-', '-', '-', '-',  // 24-31
-// 	'-', '-', '-', '-', '-', '-', '-', '-',  // 32-39
-// 	'-', '-', '-', '-', '-', '-', '-', '-',  // 40-47
-// 	'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', // 48-55
-// 	'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' // 56-63
-// ];
+const PIECE_KING = 'k';
+const PIECE_BISHOP = 'b';
 
 const DEFAULT_BOARD_STATE = [
-	'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', // 0-7
+	'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r', // 0-7
 	'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', // 8-15
 	'-', '-', '-', '-', '-', '-', '-', '-', // 16-23
-	'-', '-', '-', '-', 'R', '-', '-', '-',  // 24-31
+	'-', '-', '-', '-', '-', '-', '-', '-',  // 24-31
 	'-', '-', '-', '-', '-', '-', '-', '-',  // 32-39
-	'-', '-', '-', 'p', '-', '-', '-', '-',  // 40-47
+	'-', '-', '-', '-', '-', '-', '-', '-',  // 40-47
 	'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', // 48-55
-	'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P' // 56-63
+	'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' // 56-63
 ];
 
 const DEFAULT_GAME_STATE = {
@@ -46,116 +37,20 @@ const MOVEMENT_MAP = {
   "p": [
     -8, -16, 8, 16, -9, -7, 9, 7
   ],
+  "q": [
+  	-1, -2, -3, -4, -5, -6, -7, 1, 2, 3, 4, 5, 6, 7, 8, 16, 24, 32, 40, 48, 56, -8, -16, -24, -32, -40, -48, -56, 9, 18, 27, 36, 45, 54, 63, -9, -18, -27, -36, -45, -54, -63, 14, 21, 28, 35, 42, 49, 56, 63, -14, -21, -28, -35, -42, -49, -56, -63
+  ],	
   "r": [
   	-1, -2, -3, -4, -5, -6, -7, 1, 2, 3, 4, 5, 6, 7, 8, 16, 24, 32, 40, 48, 56, -8, -16, -24, -32, -40, -48, -56
   ],
-  "b": [
-    [1, 1],
-    [2, 2],
-    [3, 3],
-    [4, 4],
-    [5, 5],
-    [6, 6],
-    [7, 7],
-    [1, -1],
-    [2, -2],
-    [3, -3],
-    [4, -4],
-    [5, -5],
-    [6, -6],
-    [7, -7],
-    [-1, 1],
-    [-2, 2],
-    [-3, 3],
-    [-4, 4],
-    [-5, 5],
-    [-6, 6],
-    [-7, 7],
-    [-1, -1],
-    [-2, -2],
-    [-3, -3],
-    [-4, -4],
-    [-5, -5],
-    [-6, -6],
-    [-7, -7]
-  ],
-  "q": [
-    [1, 0],
-    [2, 0],
-    [3, 0],
-    [4, 0],
-    [5, 0],
-    [6, 0],
-    [7, 0],
-    [0, 1],
-    [0, 2],
-    [0, 3],
-    [0, 4],
-    [0, 5],
-    [0, 6],
-    [0, 7],
-    [-1, 0],
-    [-2, 0],
-    [-3, 0],
-    [-4, 0],
-    [-5, 0],
-    [-6, 0],
-    [-7, 0],
-    [0, -1],
-    [0, -2],
-    [0, -3],
-    [0, -4],
-    [0, -5],
-    [0, -6],
-    [0, -7],
-    [1, 1],
-    [2, 2],
-    [3, 3],
-    [4, 4],
-    [5, 5],
-    [6, 6],
-    [7, 7],
-    [1, -1],
-    [2, -2],
-    [3, -3],
-    [4, -4],
-    [5, -5],
-    [6, -6],
-    [7, -7],
-    [-1, 1],
-    [-2, 2],
-    [-3, 3],
-    [-4, 4],
-    [-5, 5],
-    [-6, 6],
-    [-7, 7],
-    [-1, -1],
-    [-2, -2],
-    [-3, -3],
-    [-4, -4],
-    [-5, -5],
-    [-6, -6],
-    [-7, -7]
-  ],
   "k": [
-    [1, 0],
-    [-1, 0],
-    [1, 1],
-    [-1, -1],
-    [0, 1],
-    [-1, -1],
-    [1, -1],
-    [0, -1]
+  	1, -1, 8, -8, 7, -7, 9, -9
+  ],
+  "b": [
+  	 9, 18, 27, 36, 45, 54, 63, -9, -18, -27, -36, -45, -54, -63, 14, 21, 28, 35, 42, 49, 56, 63, -14, -21, -28, -35, -42, -49, -56, -63
   ],
   "n": [
-    [1, 2],
-    [-1, 2],
-    [2, 1],
-    [-2, 1]
-    [1, -2],
-    [-1, -2],
-    [2, -1],
-    [-2, -1]
+  	 17, 15, 10, 6, -17, -15, -10, -6
   ]
 }
 
@@ -172,9 +67,58 @@ const ERRORS = {
 	PATH_BLOCKED: 'PATH_BLOCKED'
 }
 
+const checkPath = (squareName, moveDifference) => {
+	// Absolute move difference
+	let sign = moveDifference > 0 ? 1 : -1;
+	let absoluteMoveDifference = moveDifference*sign; // Always positive
+
+	// Path check. MOVE OUT THE WAY
+	if (squareName !== PIECE_KNIGHT) {
+		if (squareName === PIECE_PAWN) {
+			// The only time a pawn can be blocked is if it's moving two squares
+			if (moveDifference == 16*pawnSign) {
+				if (board[aPositionFrom+(8*pawnSign)] !== EMPTY_SQUARE) return ERRORS.PATH_BLOCKED;
+			}
+		} else { // This works for the queen, bishop and rook
+			// Get direction
+			let modifier = 0;
+
+			if (absoluteMoveDifference % 8 == 0) {
+				// Going up/down
+				modifier = 8*sign;
+			} else if (absoluteMoveDifference % 9 == 0) {
+				// Going diagonal /
+				modifier = 9*sign;
+			} else if (absoluteMoveDifference % 7 == 0) {
+				// Going diagonal /
+				modifier = 7*sign;
+			} else {
+				modifier = 1*sign;
+			}
+
+			// Check the Path
+			for (i=1;i<8;i++) {
+				let squareToCheck = aPositionFrom + (i * modifier); // Yes
+				
+				// Are we done?
+				if (squareToCheck === aPositionTo) break;
+
+				// Empty or not
+				if (board[squareToCheck] !== EMPTY_SQUARE) {
+					return ERRORS.PATH_BLOCKED;
+				}
+
+			}
+
+			// Path is ok!
+			return true;
+		}
+	}
+}
+
 const validateMove = (gameState, aPositionFrom, aPositionTo) => {
 	// Out of bounds check
-	if (aPositionFrom < 0 || aPositionFrom > 64 || aPositionTo < 0 || aPositionTo > 64) return ERRORS.OUT_OF_BOUNDS;
+	if (aPositionFrom < 0 || aPositionFrom > 63 || aPositionTo < 0 || aPositionTo > 63) return ERRORS.OUT_OF_BOUNDS;
 
 	// Get start square (chess piece) and target
 	let { board, turn } = gameState;
@@ -223,20 +167,18 @@ const validateMove = (gameState, aPositionFrom, aPositionTo) => {
 		possibleMovesInRank.push(i);
 	}
 
-	// Rooks can go 7 to the left or right, but not diagonally
-	if (startSquareName == PIECE_ROOK) {
-		lockedRank = true;
-	}
+	// Rooks can go 7 to the left or right, but not diagonally.
+	if (startSquareName == PIECE_ROOK) lockedRank = true;
 
 	// Absolute move difference
 	let sign = moveDifference > 0 ? 1 : -1;
 	let absoluteMoveDifference = moveDifference*sign; // Always positive
 
 	// If it's locked --> check if the move is possible in this rank
-	if (lockedRank && possibleMovesInRank.indexOf(moveDifference) < 0 && absoluteMoveDifference % 8 !== 0 ) {
-		return ERRORS.IMPOSSIBLE_MOVE;
-	}
-	// End of weird magicery
+	if (lockedRank && possibleMovesInRank.indexOf(moveDifference) < 0 && absoluteMoveDifference % 8 !== 0 ) return ERRORS.IMPOSSIBLE_MOVE;
+
+	// King can go diagonal 7, but no horizontal 7
+	if (startSquareName == PIECE_KING && moveDifference == 7 && fileToIndex == 7) return ERRORS.IMPOSSIBLE_MOVE;
 
 	// Pawn checks
 	let pawnSign = gameState.turn === COLOR_WHITE ? -1 : 1;
@@ -283,45 +225,55 @@ const validateMove = (gameState, aPositionFrom, aPositionTo) => {
 	}
 
 	// Path check. MOVE OUT THE WAY
-	if (startSquareName !== PIECE_KNIGHT) {
-		if (startSquareName === PIECE_PAWN) {
-			// The only time a pawn can be blocked is if it's moving two squares
-			if (moveDifference == 16*pawnSign) {
-				if (board[aPositionFrom+(8*pawnSign)] !== EMPTY_SQUARE) return ERRORS.PATH_BLOCKED;
-			}
-		} else {
-			// Get direction
-			let modifier = 0;
+	// if (startSquareName !== PIECE_KNIGHT) {
+	// 	if (startSquareName === PIECE_PAWN) {
+	// 		// The only time a pawn can be blocked is if it's moving two squares
+	// 		if (moveDifference == 16*pawnSign) {
+	// 			if (board[aPositionFrom+(8*pawnSign)] !== EMPTY_SQUARE) return ERRORS.PATH_BLOCKED;
+	// 		}
+	// 	} else { // This works for the queen, bishop and rook
+	// 		// Get direction
+	// 		let modifier = 0;
 
-			if (absoluteMoveDifference % 8 == 0) {
-				// Going up/down
-				modifier = 8*sign;
-			} else if (absoluteMoveDifference % 8 == 1 && moveDifference == 9) {
-				// Going diagonal /
-				modifier = 9*sign;
-			} else if (absoluteMoveDifference % 8 == 7 && moveDifference == 7) {
-				// Going diagonal \
-				modifier = 7*sign;
-			} else if (absoluteMoveDifference % 8 >= 1 && absoluteMoveDifference % 8 <= 7) {
-				// Going left/right
-				modifier = 1*sign;
-			}
+	// 		// Okay, a bit of explanation on how this works.
+	// 		// Basically, it checks the direction the piece is going.
+	// 		// If % returns 0 and it's divisible by 8, it means the piece
+	// 		// Has to be going either up or down, so we're going so scan in that direction
+	// 		// For diagonal, it's a bit more tricky, because % returning 1 can mean going
+	// 		// diagonally or horizontally. To differentiate between the two, I also check
+	// 		// if the (absolute) move difference is equal to 9 or 7, which confirms it's going
+	// 		// diagonally.
+	// 		if (absoluteMoveDifference % 8 == 0) {
+	// 			// Going up/down
+	// 			modifier = 8*sign;
+	// 		} else if (absoluteMoveDifference % 9 == 0) {
+	// 			// Going diagonal /
+	// 			modifier = 9*sign;
+	// 		} else if (absoluteMoveDifference % 7 == 0) {
+	// 			// Going diagonal /
+	// 			modifier = 7*sign;
+	// 		} else {
+	// 			modifier = 1*sign;
+	// 		}
 
-			// Check the Path
-			for (i=1;i<8;i++) {
-				let squareToCheck = aPositionFrom + (i * modifier); // Yes
+	// 		console.log('mod', absoluteMoveDifference*2 % 8);
+	// 		// Check the Path
+	// 		for (i=1;i<8;i++) {
+	// 			let squareToCheck = aPositionFrom + (i * modifier); // Yes
 				
-				// Are we done?
-				if (squareToCheck === aPositionTo) break;
+	// 			// Are we done?
+	// 			if (squareToCheck === aPositionTo) break;
 
-				// Empty or not
-				if (board[squareToCheck] !== EMPTY_SQUARE) {
-					return ERRORS.PATH_BLOCKED;
-				}
+	// 			// Empty or not
+	// 			if (board[squareToCheck] !== EMPTY_SQUARE) {
+	// 				return ERRORS.PATH_BLOCKED;
+	// 			}
 
-			}
-		}
-	}
+	// 		}
+	// 	}
+	// }
+	let pathCheck = checkPath(startSquareName, moveDifference);
+	if (pathCheck !== true) return pathCheck;
 
 	// Empty square? Checks are finished
 	if (targetSquare == EMPTY_SQUARE) return true;
@@ -339,6 +291,11 @@ const validateMove = (gameState, aPositionFrom, aPositionTo) => {
 	if (startSquareColor == targetSquareColor) return ERRORS.FRIENDLY_FIRE;
 
 	return true;
+}
+
+const isKingChecked = (gameState) => {
+	let oppositeColor = gameState.color === COLOR_WHITE ? COLOR_BLACK : COLOR_WHITE;
+	// 
 }
 
 const getArrayPositionFromSAN = (sPosition) => {
@@ -394,8 +351,8 @@ function game(gameState) {
 			return validMoves;
 		},
 
-		getAllMoves: function() {
-			let { board, turn } = gameState;
+		getAllMoves: function(color) {
+			let { board } = gameState;
 			let validMoves = [];
 
 			// Loop through board, match color
@@ -404,7 +361,7 @@ function game(gameState) {
 					// Check moves
 					let squareColor = square === square.toUpperCase() ? COLOR_WHITE : COLOR_BLACK;
 					let possibleMoves = this.getMoves(squareNumber)
-					if (squareColor == turn && possibleMoves.length > 0) {
+					if (squareColor == color && possibleMoves.length > 0) {
 						validMoves.push({ square: getSANFromArrayPosition(squareNumber), moves: possibleMoves });
 					}
 				}

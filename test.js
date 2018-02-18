@@ -2,33 +2,13 @@ const ludus = require('./ludus');
 
 // TEMPORARY FOR TESTING IGNORE PLS
 
-const DEFAULT_BOARD_STATE = [
-	'-', '-', '-', 'p', '-', '-', '-', '-',
-	'-', '-', '-', '-', 'p', '-', '', '-',
-	'-', '-', '-', '-', '-', 'P', '-', '-',
-	'-', '-', '-', '-', '-', '-', '-', '-',
-	'-', '-', '-', '-', '-', '-', '-', 'p',
-	'-', '-', '-', '-', '-', '-', '-', '-',
-	'-', '-', '-', '-', '-', '-', 'P', '-',
-	'-', '-', '-', 'R', '-', '-', '-', '-'
-];
+let newGame = new ludus.game();
+newGame.showBoard();
 
-const DEFAULT_GAME_STATE = {
-	board: DEFAULT_BOARD_STATE,
-	turn: 'w',
-	fullMoves: 0,
-	halfMoves: 0
-}
+newGame.makeMove('B2', 'B4')
+newGame.showBoard();
 
-let newGame = new ludus.game(DEFAULT_GAME_STATE);
+newGame.makeMove('G8', 'F6')
 
 newGame.showBoard();
-// newGame.makeMove('C2', 'D3');
-newGame.makeMove('D1', 'D8');
-newGame.showBoard();
-newGame.makeMove('E7', 'F6');
-newGame.showBoard();
-newGame.makeMove('G2', 'G4');
-newGame.showBoard();
-newGame.makeMove('H4', 'G3');
-newGame.showBoard();
+// Congratulations, you played yourself.
