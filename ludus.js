@@ -20,7 +20,7 @@ const DEFAULT_BOARD_STATE = [
 	'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p', // 8-15
 	'-', '-', '-', '-', '-', '-', '-', '-', // 16-23
 	'-', '-', '-', '-', '-', '-', '-', '-',  // 24-31
-	'-', '-', '-', '-', '-', '-', '-', '-',  // 32-39
+	'-', '-', '-', '-', '-', '-', '-', 'K',  // 32-39
 	'-', '-', '-', '-', '-', '-', '-', '-',  // 40-47
 	'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P', // 48-55
 	'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R' // 56-63
@@ -67,17 +67,18 @@ const ERRORS = {
 	PATH_BLOCKED: 'PATH_BLOCKED'
 }
 
-const checkPath = (squareName, moveDifference) => {
+const checkPath = (gameState, squareName, aPositionFrom, aPositionTo) => {
 	// Absolute move difference
+	let moveDifference = aPositionTo - aPositionFrom;
+	let { board } = gameState;
 	let sign = moveDifference > 0 ? 1 : -1;
 	let absoluteMoveDifference = moveDifference*sign; // Always positive
-
 	// Path check. MOVE OUT THE WAY
 	if (squareName !== PIECE_KNIGHT) {
 		if (squareName === PIECE_PAWN) {
 			// The only time a pawn can be blocked is if it's moving two squares
-			if (moveDifference == 16*pawnSign) {
-				if (board[aPositionFrom+(8*pawnSign)] !== EMPTY_SQUARE) return ERRORS.PATH_BLOCKED;
+			if (moveDifference == 16*sign) {
+				if (board[aPositionFrom+(8*sign)] !== EMPTY_SQUARE) return ERRORS.PATH_BLOCKED;
 			}
 		} else { // This works for the queen, bishop and rook
 			// Get direction
@@ -114,6 +115,7 @@ const checkPath = (squareName, moveDifference) => {
 			return true;
 		}
 	}
+	return true;
 }
 
 const validateMove = (gameState, aPositionFrom, aPositionTo) => {
@@ -145,40 +147,21 @@ const validateMove = (gameState, aPositionFrom, aPositionTo) => {
 		return ERRORS.IMPOSSIBLE_MOVE;
 	}
 
-	// Warning: really vague code ahead...
-	// Get possible horizontal moves on same rank. Basically, the problem
-	// with my one-dimensional array method is that one diagonal move is the same
-	// as for example going 7 moves to the right. So, for each piece I have to specify
-	// whether it should be locked into its rank.
-	let possibleMovesInRank = [];
-	let lockedRank = false;
-	let fileFromIndex = aPositionFrom % 8;
-	let fileToIndex = aPositionTo % 8;
-
-	// To the left of our square
-	for (i=0;i<8;i++) {
-		if (fileFromIndex == i-1) break;
-		possibleMovesInRank.push(i*-1);
-	}
-
-	// To the right of our square
-	for (i=0;i<8;i++) {
-		if (fileFromIndex + i == 8) break;
-		possibleMovesInRank.push(i);
-	}
-
-	// Rooks can go 7 to the left or right, but not diagonally.
-	if (startSquareName == PIECE_ROOK) lockedRank = true;
-
 	// Absolute move difference
 	let sign = moveDifference > 0 ? 1 : -1;
 	let absoluteMoveDifference = moveDifference*sign; // Always positive
 
-	// If it's locked --> check if the move is possible in this rank
-	if (lockedRank && possibleMovesInRank.indexOf(moveDifference) < 0 && absoluteMoveDifference % 8 !== 0 ) return ERRORS.IMPOSSIBLE_MOVE;
+	// Rooks cannot go diagonally
+	let rankFrom = Math.floor(aPositionFrom / 8);
+	let rankTo = Math.floor(aPositionTo / 8);
+	if (startSquareName == PIECE_ROOK && absoluteMoveDifference % 8 !== 0 && rankTo !== rankFrom) return ERRORS.IMPOSSIBLE_MOVE; 
 
 	// King can go diagonal 7, but no horizontal 7
-	if (startSquareName == PIECE_KING && moveDifference == 7 && fileToIndex == 7) return ERRORS.IMPOSSIBLE_MOVE;
+	let fileFromIndex = aPositionFrom % 8;
+	let fileToIndex = aPositionTo % 8;
+	let fileDifference = fileToIndex - fileFromIndex;
+
+	if (startSquareName == PIECE_KING && (fileDifference > 1 || fileDifference < -1)) return ERRORS.IMPOSSIBLE_MOVE;
 
 	// Pawn checks
 	let pawnSign = gameState.turn === COLOR_WHITE ? -1 : 1;
@@ -272,7 +255,7 @@ const validateMove = (gameState, aPositionFrom, aPositionTo) => {
 	// 		}
 	// 	}
 	// }
-	let pathCheck = checkPath(startSquareName, moveDifference);
+	let pathCheck = checkPath(gameState, startSquareName, aPositionFrom, aPositionTo);
 	if (pathCheck !== true) return pathCheck;
 
 	// Empty square? Checks are finished

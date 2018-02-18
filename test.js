@@ -5,10 +5,8 @@ const ludus = require('./ludus');
 let newGame = new ludus.game();
 newGame.showBoard();
 
-newGame.makeMove('B2', 'B4')
+// newGame.makeMove('A3', 'H3')
+console.log(newGame.getAllMoves('w'));
 newGame.showBoard();
 
-newGame.makeMove('G8', 'F6')
-
-newGame.showBoard();
 // Congratulations, you played yourself.
